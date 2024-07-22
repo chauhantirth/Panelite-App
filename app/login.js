@@ -84,7 +84,7 @@ const Login = () => {
                 AsyncStorage.setItem('accessToken', data.loginToken);
                 setLoading(false);
                 console.log("Valid Email/Pass.");
-                router.replace('index');
+                router.replace('dashboard');
             } else {
                 setLoading(false);
                 console.log("Invalid Password");

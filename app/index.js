@@ -47,11 +47,11 @@ const Main = () => {
                 if (data.status == 'failure') {
                     console.log("Token Invalid, move to login.");
                     setNextPage('login/');
-                    router.push('login')
+                    router.replace('login')
                 } else {
                     console.log("Valid Token, Go to Dashboard.");
                     setNextPage('/dashboard');
-                    router.push('login')
+                    router.replace('login')
                 }
             })
 
@@ -59,7 +59,7 @@ const Main = () => {
             console.log("Not Found, move to login");
             // save('accessToken', 'thisIsTheAccessToken');
             setNextPage('login/');
-            router.push('login')
+            router.replace('login')
         }
     }
 
