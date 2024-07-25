@@ -51,7 +51,7 @@ const Main = () => {
                 } else {
                     console.log("Valid Token, Go to Dashboard.");
                     setNextPage('/dashboard');
-                    router.replace('login')
+                    router.replace('dashboard')
                 }
             })
 
