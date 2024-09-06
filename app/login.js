@@ -79,7 +79,7 @@ const Login = () => {
         login(
         'https://rentry.co/h2cv2m8d/raw', email.toLocaleLowerCase(), password
         ).then((data) => {
-            setLoading(false);   
+            setLoading(false);   // remove 
             if (data.success) {
                 AsyncStorage.setItem('accessToken', data.loginToken);
                 setLoading(false);
