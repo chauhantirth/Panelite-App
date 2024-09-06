@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 const Profile = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [triggerLogout, setTriggerLogout] = useState(false);
     const [accessToken, setAccessToken] = useState(null);
     // success: https://rentry.co/ix87d4if/raw
     
