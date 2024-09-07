@@ -8,7 +8,6 @@ import splashImage from "../assets/splashscreen.png";
 
 const Main = () => {
     console.log("=====================================")
-    const [initLoad, setInitLoad] = useState(true);
     const [nextPage, setNextPage] = useState('login/');
 
     const [isLoading, setIsLoading] = useState(false);
@@ -67,38 +66,32 @@ const Main = () => {
     useEffect(() => {
 
         const timer = setTimeout(() => {
-            setInitLoad(false);
             retrieve('accessToken');
+            setIsLoading(true);
         }, 3000);
 
         // Clear the timeout if the component unmounts
         return () => clearTimeout(timer);
     }, []);
 
-    if (initLoad) {
-        return (<>
-            <View>
-                <Image source={splashImage} style={styles.spsImage} />
-            </View>
+    return (<>
+        <View style={{}}>
+            <Image source={splashImage} style={styles.spsImage} />
             {!isLoading ? (<></>) : (
                 <ActivityIndicator />
             )} 
-            </>
-        );
-
-    }
-
-    return (
-        <Text></Text>
+        </View>
+        </>
     );
 }
 
 
 const Home = () => {
-    return (
-        <View style={styles.spsContainer}>
-            <Main/>
-        </View>
+    return (<>
+            <View style={styles.spsContainer}>
+                <Main/>
+            </View>
+        </>
     )
 }
 
@@ -110,8 +103,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     spsImage: {
-        width: 250,
-        height: 250,
+        width: 300,
+        height: 300,
         resizeMode: "cover",
     }
 })
