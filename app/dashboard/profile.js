@@ -1,4 +1,4 @@
-import { View, Text, Alert, TouchableOpacity } from 'react-native';
+import { View, SafeAreaView, Text, Alert, TouchableOpacity } from 'react-native';
 import ColorList from '../../components/ColorList';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
@@ -82,7 +82,7 @@ const Profile = () => {
 
 
     return (
-        <View>
+        <SafeAreaView>
             <TouchableOpacity onPress={() => {
                 setError(null);
                 Alert.alert("Logout", "Are you sure, you want to Logout ?", [
@@ -96,10 +96,10 @@ const Profile = () => {
                     }
                 ]);
             }}>
-                <Text>Log Out</Text>
+            <Text>Log Out</Text>
             </TouchableOpacity>
             <ColorList color="#0891b2"/>
-        </View>
+        </SafeAreaView>
     )
 }
 

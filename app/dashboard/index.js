@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native';
+import { View, SafeAreaView, Text } from 'react-native';
 import ColorList from '../../components/ColorList';
 
 const dashboard = () => {
     return (
-        <View>
+        <SafeAreaView>
             <ColorList color="#059661"/>
-        </View>
+        </SafeAreaView>
     )
 }
 
