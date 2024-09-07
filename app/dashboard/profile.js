@@ -8,17 +8,17 @@ import { useState, useEffect } from 'react';
 const Profile = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [accessToken, setAccessToken] = useState(null);
-    // success: https://rentry.co/ix87d4if/raw
+    const [userSession, setUserSession] = useState(null);
+    // success: https://rentry.co/9bqubcgh/raw
     
     const handleLogout = async(key) => {
         setIsLoading(true);
         try {
             logout(
-                'https://rentry.co/ix87d4if/raw',
-                accessToken
+                'https://rentry.co/9bqubcgh/raw',
+                userSession
             ).then((data) => {
-                if (data.success) {
+                if (data.status == "success") {
                     setIsLoading(false)
                     AsyncStorage.removeItem(key)
                     console.log("Successfully Logged Out.")
@@ -42,12 +42,12 @@ const Profile = () => {
 
 
     const retrieve = async(key) => {
-        const at = await AsyncStorage.getItem(key);
-        setAccessToken(at);
+        const userSession = await AsyncStorage.getItem(key);
+        setUserSession(userSession);
     }
 
     useEffect(() => {
-        retrieve('accessToken');
+        retrieve('userSession');
     }, [])
 
     // useEffect(() => {
@@ -92,7 +92,7 @@ const Profile = () => {
                     },
                     {
                         text: 'Logout',
-                        onPress: () => {handleLogout('accessToken')},
+                        onPress: () => {handleLogout('userSession')},
                     }
                 ]);
             }}>
