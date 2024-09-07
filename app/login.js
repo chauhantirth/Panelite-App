@@ -75,13 +75,14 @@ const Login = () => {
         setLoading(true);
 
         // valid: https://rentry.co/h2cv2m8d/raw
+        // new valid: https://rentry.co/9o3dxoqr/raw
         // invalid: https://rentry.co/9qg7k3pn/raw
         login(
-        'https://rentry.co/h2cv2m8d/raw', email.toLocaleLowerCase(), password
+        'https://rentry.co/9o3dxoqr/raw', email.toLocaleLowerCase(), password
         ).then((data) => {
             setLoading(false);   // remove 
-            if (data.success) {
-                AsyncStorage.setItem('accessToken', data.loginToken);
+            if (data.status == 'success') {
+                AsyncStorage.setItem('userSession', JSON.stringify(data.container));
                 setLoading(false);
                 console.log("Valid Email/Pass.");
                 router.replace('dashboard');
