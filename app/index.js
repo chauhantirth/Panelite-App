@@ -7,12 +7,12 @@ import { validity } from "../components/api";
 import splashImage from "../assets/splashscreen.png";
 
 const Main = () => {
-    console.log("=====================================")
+    console.log("============SplashScreen=================")
+    
     const [nextPage, setNextPage] = useState('login/');
-
     const [isLoading, setIsLoading] = useState(false);
+    const [userSession, setUserSession] = useState(null); //remove 
 
-    const [accessToken, setAccessToken] = useState(null);
     // const navigation = useNavigation();
     //const rootNavigationState = useRootNavigationState();
 
@@ -28,19 +28,19 @@ const Main = () => {
 
     const retrieve = async (key) => {
         const result = await AsyncStorage.getItem(key)
-        // console.log(result)
-
         if (result) {
-            console.log('Found Token: '+result);
+            setUserSession(JSON.parse(result))
+            // console.log('Found Token: '+userSession.userData);
 
             // success: https://rentry.co/horg2r5p/raw
+            // new success: https://rentry.co/9o3dxoqr/raw
             // failure: https://rentry.co/krwmtcf5/raw
 
             //check token validity
             setIsLoading(true);
             validity(
-                'https://rentry.co/horg2r5p/raw',
-                accessToken
+                'https://rentry.co/9o3dxoqr/raw',
+                JSON.parse(result).sessionToken
             ).then((data) => {
                 setIsLoading(false);
                 // console.log(data)
@@ -66,7 +66,7 @@ const Main = () => {
     useEffect(() => {
 
         const timer = setTimeout(() => {
-            retrieve('accessToken');
+            retrieve('userSession');
             setIsLoading(true);
         }, 3000);
 
