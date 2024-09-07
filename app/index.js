@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View, SafeAreaView, Text } from "react-native";
+import { ActivityIndicator, View, SafeAreaView, Text, StyleSheet, Image} from "react-native";
 import { useRootNavigationState, router, useNavigation } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { validity } from "../components/api";
+import splashImage from "../assets/splashscreen.png";
 
 const Main = () => {
     console.log("=====================================")
@@ -57,7 +58,6 @@ const Main = () => {
 
         } else {
             console.log("Not Found, move to login");
-            // save('accessToken', 'thisIsTheAccessToken');
             setNextPage('login/');
             router.replace('login')
         }
@@ -71,18 +71,15 @@ const Main = () => {
             retrieve('accessToken');
         }, 3000);
 
-        //Checking for cached Auth Token...
-        // deleteToken('accessToken')
-
         // Clear the timeout if the component unmounts
         return () => clearTimeout(timer);
     }, []);
 
     if (initLoad) {
         return (<>
-            <Text>
-                Panelite.
-            </Text>
+            <View>
+                <Image source={splashImage} style={styles.spsImage} />
+            </View>
             {!isLoading ? (<></>) : (
                 <ActivityIndicator />
             )} 
@@ -92,17 +89,31 @@ const Main = () => {
     }
 
     return (
-        <Text>Done</Text>
+        <Text></Text>
     );
 }
 
 
 const Home = () => {
     return (
-        <View>
+        <View style={styles.spsContainer}>
             <Main/>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    spsContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#fff",
+    },
+    spsImage: {
+        width: 250,
+        height: 250,
+        resizeMode: "cover",
+    }
+})
 
 export default Home;
