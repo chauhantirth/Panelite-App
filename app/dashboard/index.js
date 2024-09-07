@@ -1,7 +1,24 @@
-import { View, SafeAreaView, Text, StyleSheet, ScrollView } from 'react-native';
-// import ColorList from '../../components/ColorList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
+import { View, SafeAreaView, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import solarImage from '../../assets/solar-cell.png';
 
 const dashboard = () => {
+
+    const [userSession, setUserSession] = useState({});
+
+    const retrieve = async(key) => {
+        const result = await AsyncStorage.getItem(key);
+        if(result) {
+            const rs = JSON.parse(result)
+            setUserSession(JSON.parse(atob(rs.userData)));
+        }
+    }
+
+    useEffect(() => {
+        retrieve('userSession');
+    }, [])
+
     return (
         <SafeAreaView>
             <ScrollView 
@@ -9,11 +26,32 @@ const dashboard = () => {
                 <View>
                     <Text style={styles.heading}>Dashboard</Text>
                 </View>
+
+                <View style={styles.subcontainer} >
+                    <View style={styles.scOneMain} >
+                        <View style={styles.scOneLeft}>
+                            <Text style={styles.scOneStatus}>
+                                ● Active Status
+                            </Text>
+                            <Text style={styles.scOneHeading}>
+                                Solar Power Plant
+                            </Text>
+                            {userSession ? (
+                                <Text style={styles.scOneHeadingVal}>
+                                    {userSession.orgNameShort}
+                                </Text>
+                            ) : (<></>)}
+                        </View>
+                        <View>
+                        <Image source={solarImage} style={styles.scOneSolarImg} />
+                        </View>
+                    </View>
+                </View>
                 {
                     [1, 0.8, 0.5].map(opacity=> (
                     <View 
                         key={opacity} 
-                        style={[styles.color, {backgroundColor: "#059661", opacity}]} 
+                        style={[styles.subcontainer, {opacity}]} 
                     />
                     ))
                 }
@@ -30,12 +68,49 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginBottom: 15
     },
-    color: {
+    scOneSolarImg: {
+        marginVertical: 24,
+        width: 120,
+        height: 120,
+        resizeMode: "cover",
+        marginRight: 40,
+    },
+    scOneStatus: {
+        fontSize: 11,
+        color: 'green',
+        fontWeight: '300',
+        marginTop: 4,
+    },
+    scOneHeading: {
+        fontSize: 12,
+        fontWeight: '300',
+        marginTop: 40
+    },
+    scOneHeadingVal: {
+        fontSize: 28,
+        fontWeight: '700',
+        marginTop: 0        
+    },
+    scOneLeft: {
+        flexDirection: 'column',
+        marginLeft: 22,
+    },
+    scOneMain: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    subcontainer: {
         width: '100%',
-        height: 150,
+        height: 'auto',
         borderRadius: 25,
         borderCurve: 'continuous', 
         marginBottom: 15,
+        backgroundColor: 'white', 
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 0},
+        shadowRadius: 10,
+        shadowOpacity: 0.05
     },
     container: {
       paddingHorizontal: 20, 
