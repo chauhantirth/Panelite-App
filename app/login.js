@@ -13,7 +13,7 @@ import { login } from "../components/api";
 import { Eye, EyeActive } from "../assets";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(null);
   const [password, setPassword] = useState('');
   const [seePassword, setSeePassword] = useState(true);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
@@ -101,6 +101,10 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.heading}>
+        Login
+      </Text>
+      <Text style={styles.label}>Email</Text>
       <View style={styles.wrapperInput}>
         <TextInput
           style={styles.input}
@@ -114,6 +118,7 @@ const Login = () => {
       ) : (
         <Text style={styles.textFailed}> </Text>
       )}
+      <Text style={styles.label}>Password</Text>
       <View style={styles.wrapperInput}>
         <TextInput
           style={styles.input}
@@ -165,7 +170,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 5,
     borderColor: 'grey',
-    marginTop: 10,
+    marginTop: 3,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -197,6 +202,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     borderRadius: 5,
     marginTop: 25,
+  },
+  heading: {
+    alignSelf: 'center',
+    color: 'black',
+    fontWeight: '700',
+    fontSize: '38',
+    marginBottom: 30
+  },
+  label: {
+    color: 'black',
+    fontWeight: '700',
   },
   text: {
     color: 'white',
