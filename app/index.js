@@ -39,7 +39,7 @@ const Main = () => {
             //check token validity
             setIsLoading(true);
             validity(
-                'https://rentry.co/9o3dxoqr/raw',
+                'https://rentry.co/5cw92se2/raw',
                 JSON.parse(result).sessionToken
             ).then((data) => {
                 setIsLoading(false);

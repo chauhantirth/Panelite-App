@@ -78,7 +78,7 @@ const Login = () => {
         // new valid: https://rentry.co/9o3dxoqr/raw
         // invalid: https://rentry.co/9qg7k3pn/raw
         login(
-        'https://rentry.co/9o3dxoqr/raw', email.toLocaleLowerCase(), password
+        'https://rentry.co/5cw92se2/raw', email.toLocaleLowerCase(), password
         ).then((data) => {
             setLoading(false);   // remove 
             if (data.status == 'success') {
