@@ -1,19 +1,82 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { View, SafeAreaView, Text, StyleSheet, ScrollView, Image, Svg, Touchable, TouchableOpacity, Modal } from 'react-native';
+import { View, SafeAreaView, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Modal, Alert } from 'react-native';
 import solarImage from '../../assets/solar-cell.png';
 import calenderImage from '../../assets/calendar.png';
+import loaderImage from '../../assets/fade-stagger-circles.png'
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 
 const dashboard = () => {
 
-    const [userSession, setUserSession] = useState({});
+    const [userSessionData, setUserSessionData] = useState({});
+    const [sessionToken, setSessionToken] = useState({});
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
 
     const [dateRange, setDateRange] = useState({});
     const [predictedVal, setPredictedVal] = useState('-');
+
+    const [predLoading, setPredLoading] = useState(false);
+    const [networkError, setNetworkError] = useState(null);
+
+
+    const handlePredictionAPI = async() => {
+
+        if (!selectedDate) {
+            Alert.alert("Invalid Date", "Please select a Date first.", [
+                {
+                    text: 'OK',
+                    onPress: () => {},
+                }
+            ]);
+            return;
+        }
+        
+        setPredLoading(true);
+        setNetworkError(null);
+
+        // success: https://rentry.co/zrcvqmwx/raw 
+        // failure: https://rentry.co/3pwr53xd/raw
+
+        try {
+            const response = await fetch(
+                "https://rentry.co/zrcvqmwx/raw", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }, 
+                    // body: JSON.stringify({
+                    //     "session-token": sessionToken,
+                    //     "selected-date-raw": selectedDate.raw,
+                    // })
+            });
+            setPredLoading(false);
+    
+            if (!response.ok) {
+                setNetworkError('Something went wrong, please try again later.')
+                // throw new Error('Failed to push data to Database.');
+                return;
+            }
+    
+            const resData = await response.json();
+            if (resData) {
+                if (resData.status === "success") {
+                    setPredictedVal(resData.container.predictedVal)
+                    console.log(resData.container.predictedVal)
+                } else {
+                    console.log("Prediction Failure.")
+                    setNetworkError(resData.errorMsg)
+                }
+            } else {
+                setNetworkError('An Error occured parsing the server response, Try again later.')
+            }
+        } catch (e) {
+            setPredLoading(false)
+            setNetworkError("Something went wrong, check your internet connection and try again.")
+            console.log(e)
+        }
+    }
 
     const handleDateSelection = (date) => {
         const parsedDate = moment(date.dateString, 'YYYY-MM-DD')
@@ -33,7 +96,8 @@ const dashboard = () => {
         const result = await AsyncStorage.getItem(key);
         if(result) {
             const rs = JSON.parse(result)
-            setUserSession(JSON.parse(atob(rs.userData)));
+            setUserSessionData(JSON.parse(atob(rs.userData)));
+            setSessionToken(rs.sessionToken)
         }
     }
 
@@ -66,9 +130,9 @@ const dashboard = () => {
                             <Text style={styles.scOneHeading}>
                                 Solar Power Plant
                             </Text>
-                            {userSession ? (
+                            {userSessionData ? (
                                 <Text style={styles.scOneHeadingVal}>
-                                    {userSession.orgNameShort}
+                                    {userSessionData.orgNameShort}
                                 </Text>
                             ) : (<></>)}
                         </View>
@@ -88,9 +152,9 @@ const dashboard = () => {
                             <Text style={styles.scTwoHeading}>
                                 Plant Capacity
                             </Text>
-                            {userSession ? (
+                            {userSessionData ? (
                                 <Text style={styles.scTwoHeadingVal}>
-                                    {userSession.plantCapacity}
+                                    {userSessionData.plantCapacity}
                                 </Text>
                             ) : (<></>)}
                         </View>
@@ -98,9 +162,9 @@ const dashboard = () => {
                             <Text style={styles.scTwoHeading}>
                                 Panels
                             </Text>
-                            {userSession ? (
+                            {userSessionData ? (
                                 <Text style={styles.scTwoHeadingVal}>
-                                    {userSession.plantNumberOfPanels}
+                                    {userSessionData.plantNumberOfPanels}
                                 </Text>
                             ) : (<></>)}
                         </View>
@@ -114,9 +178,9 @@ const dashboard = () => {
                     />
                     <View style={styles.scTwoBottom} >
                         <Text style={styles.scTwoHeading2}>Location</Text>
-                        {userSession ? (
+                        {userSessionData ? (
                             <Text style={[styles.scTwoHeadingVal2]}>
-                                {userSession.orgCity}, IN
+                                {userSessionData.orgCity}, IN
                             </Text>
                         ) : (<></>)}
                     </View>
@@ -140,10 +204,7 @@ const dashboard = () => {
                                     {selectedDate ? (
                                         <Text style={styles.scThreeHeadingVal}>  {selectedDate.formated.day} {selectedDate.formated.month}
                                         </Text>
-                                    ) : (
-                                        // <Text style={styles.scThreeHeadingValEmpty}> - </Text>
-                                        <></>
-                                    )}
+                                    ) : (<></>)}
                                 </TouchableOpacity>
                                 <Modal visible={showCalendar} animationType='fade'>
                                     <Calendar 
@@ -160,46 +221,76 @@ const dashboard = () => {
                             </View>
                         </View>
                         <View style={styles.scThreeRight}>
-                            <Text style={styles.scThreeHeading}>Generation</Text>
-                            <Text style={styles.scThreeHeadingValRight}>{predictedVal}</Text>
+                            <Text style={styles.scThreeHeading}>Generation (kWh)</Text>
+                            <Text style={styles.scThreeHeadingValRight}>{predictedVal} </Text>
                         </View>
                     </View>
-                    <View style={styles.scThreeButtonContainer}>
-                        <TouchableOpacity 
-                            activeStyle
-                            style={styles.scThreeButton}
-                        >
-                            <Text style={styles.scThreeButtonText}>Predict</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {predLoading ? (
+                        <View style={styles.scThreeButtonContainerDisable}>
+                            <TouchableOpacity 
+                                // onPress={() => handlePredictionAPI()}
+                                disabled={predLoading}
+                                style={styles.scThreeButton}
+                            >
+                                <Image source={loaderImage} style={styles.scThreeCalenderImg} />
+                                {/* <Text style={styles.scThreeButtonText}>Predict</Text> */}
+                            </TouchableOpacity>
+                        </View>
+                    ) : (
+                        <View style={styles.scThreeButtonContainer}>
+                            <TouchableOpacity 
+                                onPress={() => handlePredictionAPI()}
+                                style={styles.scThreeButton}
+                            >
+                                <Text style={styles.scThreeButtonText}>Predict</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 </View>
-                {
-                    [1, 0.8, 0.5].map(opacity=> (
-                    <View 
-                        key={opacity} 
-                        style={[styles.subcontainer, {opacity}]} 
-                    />
-                    ))
-                }
+                {networkError ? (
+                <View style={styles.networkErrorBox}>
+                    <Text style={styles.networkErrorText}>{networkError}
+                    </Text>
+                </View>
+                ) : (<></>)}
             </ScrollView>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    networkErrorText: {
+        textAlign: 'center',
+        fontSize: 14,
+        fontWeight: '300',
+        color: 'red',
+    },  
+    networkErrorBox: {
+        width: 'auto',
+        marginHorizontal: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 'auto'
+    },  
     subHeading: {
         fontSize: 18,
         fontWeight: '700',
         marginHorizontal: 6,
-        marginTop: 12,
-        marginBottom: 15
+        marginTop: 9,
+        marginBottom: 9
     },
     heading: {
         fontSize: 38,
         fontWeight: '700',
         marginHorizontal: 6,
-        marginTop: 12,
-        marginBottom: 15
+        marginTop: 8,
+        marginBottom: 11
+    },
+    scThreeButtonLoaderImg: {
+        marginVertical: 8,
+        width: 18,
+        height: 18,
+        resizeMode: "cover",
     },
     scThreeButtonText: {
         fontSize: 18,
@@ -207,11 +298,31 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         color: 'black'
     },
+    scThreeButtonDisable: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     scThreeButton: {
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    scThreeButtonContainerDisable: {
+        marginHorizontal: 20,
+        marginVertical: 2,
+        width: 'auto',
+        height: 40,
+        borderRadius: 45,
+        borderCurve: 'continuous', 
+        marginBottom: 15,
+        backgroundColor: '#737373', 
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 0},
+        shadowRadius: 10,
+        shadowOpacity: 0.2      
     },
     scThreeButtonContainer: {
         marginHorizontal: 20,
@@ -278,14 +389,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginVertical: 14,
-        marginLeft: 55,
+        marginLeft: 45,
     },
     scThreeRight: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         marginVertical: 14,
-        marginRight: 55,
+        marginRight: 45,
     },
     scThreeMain: {
         flexDirection: 'row',
