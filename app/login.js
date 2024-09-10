@@ -19,7 +19,8 @@ const Login = () => {
   const [checkValidEmail, setCheckValidEmail] = useState(false);
 
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [networkError, setNetworkError] = useState(null);
 
   const handleCheckEmail = text => {
     let re = /\S+@\S+\.\S+/;
@@ -68,39 +69,62 @@ const Login = () => {
     return null;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setError(null);
     const checkPassowrd = checkPasswordValidity(password);
     if (!checkPassowrd) {
-        setLoading(true);
 
         // valid: https://rentry.co/h2cv2m8d/raw
         // new valid: https://rentry.co/9o3dxoqr/raw
         // invalid: https://rentry.co/9qg7k3pn/raw
-        login(
-        'https://rentry.co/5cw92se2/raw', email.toLocaleLowerCase(), password
-        ).then((data) => {
-            setLoading(false);   // remove 
-            if (data.status == 'success') {
-                AsyncStorage.setItem('userSession', JSON.stringify(data.container));
-                setLoading(false);
-                console.log("Valid Email/Pass.");
-                router.replace('dashboard');
-            } else {
-                setLoading(false);
-                console.log("Invalid Password");
-                setPassword('');
-                setError(data.errorMsg);
-            }
-        }).catch(err => {
-          console.error(err);
-        });
+
+        try {
+          setIsLoading(true);
+          setNetworkError(null);
+          const response = await fetch(
+              "https://rentry.co/9o3dxoqr/raw", {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  }, 
+                  // body: JSON.stringify({
+                  //     "userEmail": email.toLocaleLowerCase(),
+                  //     "userPassword": password,
+                  // })
+          });
+          setIsLoading(false);
+  
+          if (!response.ok) {
+              setNetworkError('Something went wrong, please try again later.')
+              // throw new Error('Failed to push data to Database.');
+              return;
+          }
+  
+          const resData = await response.json();
+          if (resData) {
+              if (resData.status === "success") {
+                  AsyncStorage.setItem('userSession', JSON.stringify(resData.container));
+                  console.log("Valid Email/Pass.");
+                  router.replace('dashboard');
+              } else {
+                  console.log("Invalid Password");
+                  setPassword('');
+                  setError(data.errorMsg);
+              }
+          } else {
+              setNetworkError('An Error occured parsing the server response, Try again later.')
+          }
+      } catch (e) {
+          setIsLoading(false);
+          setNetworkError("Something went wrong, check your internet connection and try again.")
+          console.log(e)
+      }
     } else {
       alert(checkPassowrd);
     }
   };
 
-  return (
+  return (<>
     <View style={styles.container}>
       <Text style={styles.heading}>
         Login
@@ -134,7 +158,7 @@ const Login = () => {
           <Image source={seePassword ? Eye : EyeActive} style={styles.icon} />
         </TouchableOpacity>
       </View>
-      {email == '' || password == '' || checkValidEmail == true || loading == true ? (<>
+      {email == '' || password == '' || checkValidEmail == true || isLoading == true ? (<>
             {error ? (
                 <Text style={styles.textFailed}>{error}</Text>
             ) : (
@@ -158,13 +182,36 @@ const Login = () => {
             </TouchableOpacity>
         </>
       )}
+          {networkError ? (
+      <View style={styles.networkErrorBox}>
+          <Text style={styles.networkErrorText}>{networkError}
+          </Text>
+      </View>
+      ) : (<></>)}
     </View>
+    </>
   );
 }
 const styles = StyleSheet.create({
+  networkErrorText: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: '300',
+    color: 'red',
+},  
+networkErrorBox: {
+    width: 'auto',
+    marginTop: 40,
+    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 'auto'
+}, 
   container: {
     flex: 1,
-    justifyContent: 'center',
+    marginTop: 260,
+    // justifyContent: 'center',
+    position: 'absolute',
     marginHorizontal: 20,
   },
   wrapperInput: {
