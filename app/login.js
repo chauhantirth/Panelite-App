@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { login } from "../components/api";
 import { Eye, EyeActive } from "../assets";
 
 const Login = () => {

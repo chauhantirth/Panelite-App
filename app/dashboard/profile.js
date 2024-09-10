@@ -2,7 +2,6 @@ import { View, SafeAreaView, Text, Alert, TouchableOpacity, StyleSheet, ScrollVi
 // import ColorList from '../../components/ColorList';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
-import { logout } from "../../components/api";
 import { useState, useEffect } from 'react';
 import loaderImage from '../../assets/fade-stagger-circles.png'
 

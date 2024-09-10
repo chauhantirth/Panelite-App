@@ -3,7 +3,6 @@ import { ActivityIndicator, View, SafeAreaView, Text, StyleSheet, Image} from "r
 import { useRootNavigationState, router, useNavigation } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { validity } from "../components/api";
 import splashImage from "../assets/splashscreen.png";
 
 const Main = () => {
