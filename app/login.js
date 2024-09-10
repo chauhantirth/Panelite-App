@@ -82,15 +82,17 @@ const Login = () => {
           setIsLoading(true);
           setNetworkError(null);
           const response = await fetch(
-              "https://rentry.co/9o3dxoqr/raw", {
-                  method: 'GET',
+              "http://127.0.0.1:5050/api/login", {
+                  method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
                   }, 
-                  // body: JSON.stringify({
-                  //     "userEmail": email.toLocaleLowerCase(),
-                  //     "userPassword": password,
-                  // })
+                  body: JSON.stringify({
+                    "data": {
+                      "userEmail": email.toLocaleLowerCase(),
+                      "userPassword": password,
+                  }
+                  })
           });
           setIsLoading(false);
   
@@ -109,7 +111,7 @@ const Login = () => {
               } else {
                   console.log("Invalid Password");
                   setPassword('');
-                  setError(data.errorMsg);
+                  setError(resData.errorMsg);
               }
           } else {
               setNetworkError('An Error occured parsing the server response, Try again later.')
