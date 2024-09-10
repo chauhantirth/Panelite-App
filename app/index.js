@@ -22,11 +22,15 @@ const Main = () => {
         if (result) {
             const rs = JSON.parse(result)
 
+            // success: https://rentry.co/horg2r5p/raw
+            // new success: https://rentry.co/9o3dxoqr/raw
+            // failure: https://rentry.co/krwmtcf5/raw
+
             try {
                 setIsLoading(true);
                 setNetworkError(null);
                 const response = await fetch(
-                    "https://rentry.co/9o3dxoqr/raw", {
+                    "https://rentry.co/krwmtcf5/raw", {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -58,7 +62,7 @@ const Main = () => {
                     setNetworkError('An Error occured parsing the server response, Try again later.')
                 }
             } catch (e) {
-                setPredLoading(false)
+                setIsLoading(false);
                 setNetworkError("Something went wrong, check your internet connection and try again.")
                 console.log(e)
             }
@@ -75,7 +79,7 @@ const Main = () => {
 
         const timer = setTimeout(() => {
             retrieve('userSession');
-            setIsLoading(true);
+            // setIsLoading(true);
         }, 3000);
 
         // Clear the timeout if the component unmounts
@@ -83,44 +87,79 @@ const Main = () => {
     }, []);
 
     return (<>
-        <View style={{}}>
-            <Image source={splashImage} style={styles.spsImage} />
+    <SafeAreaView>
+        <View style={styles.container}>
+            <View style={styles.subcontainer}>
+                {/* <Image source={splashImage} style={styles.spsImage} /> */}
+                <Text style={styles.label}>Panelite</Text>
+            </View>
             {!isLoading ? (<></>) : (
-                <ActivityIndicator />
-            )} 
-            {networkError ? (
-                <View style={styles.networkErrorBox}>
-                    <Text style={styles.networkErrorText}>{networkError}
-                    </Text>
+                <View style={styles.subcontainer}>
+                    <ActivityIndicator style={styles.activityLoader}/>
                 </View>
-            ) : (<></>)}
+                )} 
+            {networkError ? (
+                <View style={styles.subcontainer}>
+                    <View style={styles.networkErrorBox}>
+                        <Text style={styles.networkErrorText}>{networkError}
+                        </Text>
+                    </View>
+                </View>
+                ) : (<></>)}
         </View>
+    </SafeAreaView>
         </>
     );
 }
 
 
-const Home = () => {
-    return (<>
-            <View style={styles.spsContainer}>
-                <Main/>
-            </View>
-        </>
-    )
-}
-
 const styles = StyleSheet.create({
-    spsContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#fff",
-    },
+    networkErrorText: {
+        textAlign: 'center',
+        fontSize: 14,
+        fontWeight: '300',
+        color: 'red',
+    },  
+    networkErrorBox: {
+        width: 'auto',
+        marginTop: 40,
+        marginHorizontal: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 'auto'
+    }, 
     spsImage: {
         width: 300,
         height: 300,
         resizeMode: "cover",
+    },
+    label: {
+        color: 'black',
+        fontSize: 72,
+        fontWeight: '700',
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 2},
+        shadowRadius: 10,
+        shadowOpacity: 0.15,
+    },
+    activityLoader: {
+        position: 'relative'
+    },
+    subcontainer: {
+        flexDirection: 'column',
+        width: '100%',
+        height: 'auto',
+        borderRadius: 25,
+        borderCurve: 'continuous', 
+        marginBottom: 15,
+        alignItems: "center",
+    },
+    container: {
+        marginTop: 280,
+        paddingHorizontal: 20, 
+        paddingVertical: 10, 
+        height: '100%'
     }
 })
 
-export default Home;
+export default Main;
