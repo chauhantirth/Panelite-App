@@ -23,16 +23,16 @@ const Profile = () => {
 
         try {
             const response = await fetch(
-                "https://rentry.co/3pwr53xd/raw", {
-                    method: 'GET',
+                "http://127.0.0.1:5050/api/logout", {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     }, 
-                    // body: JSON.stringify({
-                    //     label: itemName,
-                    //     value: itemName,
-                    //     price: itemPrice
-                    // })
+                    body: JSON.stringify({
+                        "data": {
+                            "sessionToken": sessionToken,
+                        }
+                    })
             });
             setLogoutLoading(false);
     
