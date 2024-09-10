@@ -30,14 +30,16 @@ const Main = () => {
                 setIsLoading(true);
                 setNetworkError(null);
                 const response = await fetch(
-                    "https://rentry.co/krwmtcf5/raw", {
-                        method: 'GET',
+                    "http://127.0.0.1:5050/api/refresh", {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         }, 
-                        // body: JSON.stringify({
-                        //     "session-token": rs.sessionToken,
-                        // })
+                        body: JSON.stringify({
+                            "data": {
+                                "sessionToken": rs.sessionToken
+                            }
+                        })
                 });
                 setIsLoading(false);
         
