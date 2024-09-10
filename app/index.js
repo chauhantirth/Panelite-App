@@ -30,7 +30,7 @@ const Main = () => {
                 setIsLoading(true);
                 setNetworkError(null);
                 const response = await fetch(
-                    endpoints.local.refresh, {
+                    endpoints.prod.refresh, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

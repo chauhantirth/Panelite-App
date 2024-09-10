@@ -82,7 +82,7 @@ const Login = () => {
           setIsLoading(true);
           setNetworkError(null);
           const response = await fetch(
-              endpoints.local.login, {
+              endpoints.prod.login, {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ const Login = () => {
         <TextInput
           style={styles.input}
           autoCapitalize='none'
-          // keyboardType='email-address'
+          keyboardType='email-address'
           autoCompleteType='email'
           placeholder="Email"
           value={email}

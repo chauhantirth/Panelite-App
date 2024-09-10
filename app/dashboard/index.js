@@ -42,7 +42,7 @@ const dashboard = () => {
 
         try {
             const response = await fetch(
-                endpoints.local.predict, {
+                endpoints.prod.predict, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

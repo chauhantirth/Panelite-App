@@ -22,7 +22,7 @@ const Profile = () => {
 
         try {
             const response = await fetch(
-                endpoints.local.logout, {
+                endpoints.prod.logout, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

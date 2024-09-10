@@ -1,9 +1,9 @@
 const endpoints = {
     "prod": {
-        "refresh": "",
-        "login": "",
-        "predict": "",
-        "logout": ""
+        "refresh": "https://panelite-server.vercel.app/api/refresh",
+        "login": "https://panelite-server.vercel.app/api/login",
+        "predict": "https://panelite-server.vercel.app/api/predict",
+        "logout": "https://panelite-server.vercel.app/api/logout"
     },
     "local": {
         "refresh": "http://192.168.0.157:5050/api/refresh",
