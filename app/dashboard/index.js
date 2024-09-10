@@ -41,15 +41,17 @@ const dashboard = () => {
 
         try {
             const response = await fetch(
-                "https://rentry.co/zrcvqmwx/raw", {
-                    method: 'GET',
+                "http://127.0.0.1:5050/api/predict", {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     }, 
-                    // body: JSON.stringify({
-                    //     "session-token": sessionToken,
-                    //     "selected-date-raw": selectedDate.raw,
-                    // })
+                    body: JSON.stringify({
+                        "data": {
+                            "sessionToken": sessionToken,
+                            "dateInfo": selectedDate.raw,
+                        }
+                    })
             });
             setPredLoading(false);
     
