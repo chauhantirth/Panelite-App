@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
 import { useState, useEffect } from 'react';
 import loaderImage from '../../assets/fade-stagger-circles.png'
+import endpoints from "../../constants/constants";
 
 const Profile = () => {
 
@@ -21,7 +22,7 @@ const Profile = () => {
 
         try {
             const response = await fetch(
-                "http://127.0.0.1:5050/api/logout", {
+                endpoints.local.logout, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

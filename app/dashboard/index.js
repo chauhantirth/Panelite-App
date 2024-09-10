@@ -6,6 +6,7 @@ import calenderImage from '../../assets/calendar.png';
 import loaderImage from '../../assets/fade-stagger-circles.png'
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
+import endpoints from "../../constants/constants";
 
 const dashboard = () => {
 
@@ -41,7 +42,7 @@ const dashboard = () => {
 
         try {
             const response = await fetch(
-                "http://127.0.0.1:5050/api/predict", {
+                endpoints.local.predict, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

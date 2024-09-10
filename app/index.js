@@ -4,6 +4,7 @@ import { useRootNavigationState, router, useNavigation } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import splashImage from "../assets/splashscreen.png";
+import endpoints from "../constants/constants";
 
 const Main = () => {
     console.log("============SplashScreen=================")
@@ -29,7 +30,7 @@ const Main = () => {
                 setIsLoading(true);
                 setNetworkError(null);
                 const response = await fetch(
-                    "http://127.0.0.1:5050/api/refresh", {
+                    endpoints.local.refresh, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

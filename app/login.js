@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { Eye, EyeActive } from "../assets";
+import endpoints from "../constants/constants";
 
 const Login = () => {
   const [email, setEmail] = useState(null);
@@ -81,7 +82,7 @@ const Login = () => {
           setIsLoading(true);
           setNetworkError(null);
           const response = await fetch(
-              "http://127.0.0.1:5050/api/login", {
+              endpoints.local.login, {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json',
