@@ -1,5 +1,4 @@
 import { View, SafeAreaView, Text, Alert, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-// import ColorList from '../../components/ColorList';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from 'expo-router';
 import { useState, useEffect } from 'react';
