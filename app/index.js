@@ -11,49 +11,57 @@ const Main = () => {
     
     const [nextPage, setNextPage] = useState('login/');
     const [isLoading, setIsLoading] = useState(false);
-    const [userSession, setUserSession] = useState(null); //remove 
+    const [networkError, setNetworkError] = useState(null);
+
 
     // const navigation = useNavigation();
     //const rootNavigationState = useRootNavigationState();
 
-    const save = async(key, value) => {
-        setAccessToken(value);
-        AsyncStorage.setItem(key, value);
-    }
-
-    const deleteToken = async(key) => {
-        setAccessToken(null);
-        AsyncStorage.removeItem(key)
-    }
-
     const retrieve = async (key) => {
         const result = await AsyncStorage.getItem(key)
         if (result) {
-            setUserSession(JSON.parse(result))
-            // console.log('Found Token: '+userSession.userData);
+            const rs = JSON.parse(result)
 
-            // success: https://rentry.co/horg2r5p/raw
-            // new success: https://rentry.co/9o3dxoqr/raw
-            // failure: https://rentry.co/krwmtcf5/raw
-
-            //check token validity
-            setIsLoading(true);
-            validity(
-                'https://rentry.co/5cw92se2/raw',
-                JSON.parse(result).sessionToken
-            ).then((data) => {
+            try {
+                setIsLoading(true);
+                setNetworkError(null);
+                const response = await fetch(
+                    "https://rentry.co/9o3dxoqr/raw", {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }, 
+                        // body: JSON.stringify({
+                        //     "session-token": rs.sessionToken,
+                        // })
+                });
                 setIsLoading(false);
-                // console.log(data)
-                if (data.status == 'failure') {
-                    console.log("Token Invalid, move to login.");
-                    setNextPage('login/');
-                    router.replace('login')
-                } else {
-                    console.log("Valid Token, Go to Dashboard.");
-                    setNextPage('/dashboard');
-                    router.replace('dashboard')
+        
+                if (!response.ok) {
+                    setNetworkError('Something went wrong, please try again later.')
+                    // throw new Error('Failed to push data to Database.');
+                    return;
                 }
-            })
+        
+                const resData = await response.json();
+                if (resData) {
+                    if (resData.status === "success") {
+                        console.log("Valid Token, Go to Dashboard.");
+                        setNextPage('/dashboard')
+                        router.replace('dashboard')
+                    } else {
+                        console.log("Token Invalid, move to login.");
+                        setNextPage('login/');
+                        router.replace('login')
+                    }
+                } else {
+                    setNetworkError('An Error occured parsing the server response, Try again later.')
+                }
+            } catch (e) {
+                setPredLoading(false)
+                setNetworkError("Something went wrong, check your internet connection and try again.")
+                console.log(e)
+            }
 
         } else {
             console.log("Not Found, move to login");
@@ -80,6 +88,12 @@ const Main = () => {
             {!isLoading ? (<></>) : (
                 <ActivityIndicator />
             )} 
+            {networkError ? (
+                <View style={styles.networkErrorBox}>
+                    <Text style={styles.networkErrorText}>{networkError}
+                    </Text>
+                </View>
+            ) : (<></>)}
         </View>
         </>
     );
