@@ -6,10 +6,10 @@ const endpoints = {
         "logout": ""
     },
     "local": {
-        "refresh": "http://127.0.0.1:5050/api/refresh",
-        "login": "http://127.0.0.1:5050/api/login",
-        "predict": "http://127.0.0.1:5050/api/predict",
-        "logout": "http://127.0.0.1:5050/api/logout"
+        "refresh": "http://192.168.0.157:5050/api/refresh",
+        "login": "http://192.168.0.157:5050/api/login",
+        "predict": "http://192.168.0.157:5050/api/predict",
+        "logout": "http://192.168.0.157:5050/api/logout"
     }
 };
 

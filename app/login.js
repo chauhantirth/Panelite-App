@@ -135,6 +135,9 @@ const Login = () => {
       <View style={styles.wrapperInput}>
         <TextInput
           style={styles.input}
+          autoCapitalize='none'
+          // keyboardType='email-address'
+          autoCompleteType='email'
           placeholder="Email"
           value={email}
           onChangeText={text => handleCheckEmail(text)}
@@ -149,6 +152,7 @@ const Login = () => {
       <View style={styles.wrapperInput}>
         <TextInput
           style={styles.input}
+          autoCapitalize='none'
           placeholder="Password"
           value={password}
           secureTextEntry={seePassword}
