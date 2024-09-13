@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View, SafeAreaView, Text, StyleSheet, Image} from "react-native";
-import { useRootNavigationState, router, useNavigation } from "expo-router";
-import * as SecureStore from 'expo-secure-store';
+import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import splashImage from "../assets/splashscreen.png";
+// import splashImage from "../assets/splashscreen.png";
 import endpoints from "../constants/constants";
 
 const Main = () => {
@@ -12,10 +11,6 @@ const Main = () => {
     const [nextPage, setNextPage] = useState('login/');
     const [isLoading, setIsLoading] = useState(false);
     const [networkError, setNetworkError] = useState(null);
-
-
-    // const navigation = useNavigation();
-    //const rootNavigationState = useRootNavigationState();
 
     const retrieve = async (key) => {
         const result = await AsyncStorage.getItem(key)
@@ -81,7 +76,6 @@ const Main = () => {
 
         const timer = setTimeout(() => {
             retrieve('userSession');
-            // setIsLoading(true);
         }, 3000);
 
         // Clear the timeout if the component unmounts
