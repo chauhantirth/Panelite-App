@@ -236,7 +236,6 @@ const dashboard = () => {
                                 style={styles.scThreeButton}
                             >
                                 <Image source={loaderImage} style={styles.scThreeCalenderImg} />
-                                {/* <Text style={styles.scThreeButtonText}>Predict</Text> */}
                             </TouchableOpacity>
                         </View>
                     ) : (
