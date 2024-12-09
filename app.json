@@ -9,6 +9,10 @@
       "expo-secure-store"
     ],
     "name": "Panelite-App",
-    "slug": "Panelite-App"
+    "slug": "Panelite-App",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.anonymous.Panelite-App"
+    }
   }
 }
